@@ -1,0 +1,324 @@
+/* =========
+   Theme (WCAG-friendly)
+   ========= */
+:root{
+  /* Backgrounds */
+  --bg: #f5f0e6;           /* warm beige background */
+  --surface: #ffffff;      /* cards / surfaces */
+  --surface-2: #fbf8f2;    /* subtle secondary surface */
+
+  /* Text */
+  --text: #1f2937;         /* slate-ish, high contrast on beige/white */
+  --muted: #4b5563;        /* secondary text */
+  --border: #c7bca8;       /* soft border that still contrasts */
+
+  /* Brand / accents */
+  --brand: #1b4d3e;        /* deep green */
+  --brand-contrast: #ffffff;
+
+  /* Links */
+  --link: #0b5bd3;
+  --link-hover: #0849a9;
+
+  /* Focus (very visible) */
+  --focus: #ffbf47;        /* amber focus ring */
+  --focus-shadow: rgba(255, 191, 71, 0.45);
+
+  /* Feedback */
+  --danger: #b42318;
+  --danger-bg: #fff1f0;
+
+  /* UI */
+  --radius: 12px;
+  --radius-sm: 10px;
+  --shadow: 0 10px 28px rgba(31, 41, 55, 0.10);
+  --shadow-sm: 0 6px 18px rgba(31, 41, 55, 0.10);
+}
+
+/* =========
+   Base reset
+   ========= */
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+/* =========
+   Skip link (WCAG)
+   ========= */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9999;
+}
+.skip-link:focus {
+  left: 12px;
+  top: 12px;
+  background: var(--surface);
+  border: 2px solid var(--text);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+/* =========
+   Header bar
+   ========= */
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 14px 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--brand);
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text);
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.nav-link:hover {
+  background: var(--surface-2);
+}
+
+/* Logout button styled as nav item */
+.btn-link {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font: inherit;
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.btn-link:hover {
+  background: #f3ede2;
+}
+
+.logout-form { margin: 0; }
+
+/* =========
+   Main page wrapper
+   ========= */
+.page { padding: 24px; }
+
+.frame {
+  max-width: 980px;
+  margin: 18px auto 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  min-height: 72vh;
+}
+
+.frame-title {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.frame-body { padding: 26px; }
+
+/* =========
+   Layouts
+   ========= */
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.one-col {
+  display: grid;
+  place-items: start center;
+}
+
+@media (max-width: 760px) {
+  .two-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========
+   Cards
+   ========= */
+.card {
+  padding: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.card-narrow { width: min(520px, 100%); }
+
+.card-title {
+  text-align: center;
+  margin: 10px 0 18px;
+  font-size: 22px;
+}
+
+/* =========
+   Forms (WCAG-friendly)
+   ========= */
+.form { display: grid; gap: 14px; }
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.field input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Strong visible focus ring (WCAG) */
+.field input:focus,
+.btn:focus,
+.btn-link:focus,
+.nav-link:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-shadow);
+}
+
+/* =========
+   Buttons
+   ========= */
+.card-actions { margin-top: 14px; display: flex; }
+.card-actions.center { justify-content: center; }
+.card-actions.right { justify-content: flex-end; }
+.gap { gap: 12px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  background: var(--brand);
+  color: var(--brand-contrast);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn:hover { filter: brightness(0.95); }
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-2);
+}
+
+/* =========
+   Links
+   ========= */
+a { color: var(--link); }
+a:hover { color: var(--link-hover); }
+
+/* =========
+   Alerts / errors
+   ========= */
+.alert {
+  border: 1px solid var(--danger);
+  background: var(--danger-bg);
+  color: var(--danger);
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+/* Improve spacing for error lists rendered by Django */
+.alert ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+/* ===== Header layout with centered brand ===== */
+
+.header-inner {
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 14px 20px;
+
+  display: flex;
+  align-items: center;
+}
+
+/* Empty left side to balance layout */
+.header-left {
+  width: 200px;
+}
+
+/* Center the brand absolutely */
+.brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 800;
+  color: var(--brand);
+}
+
+/* Right side auth */
+.auth-area {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-info {
+  font-size: 14px;
+  color: var(--muted);
+}
