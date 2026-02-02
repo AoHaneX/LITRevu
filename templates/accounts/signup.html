@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Inscription | LITReview{% endblock %}
+
+{% block content %}
+  <div class="frame">
+    <div class="frame-title">Formulaire d'inscription</div>
+
+    <div class="frame-body one-col">
+      <section class="card card-narrow" aria-labelledby="signup-title">
+        <h1 id="signup-title" class="card-title">Inscrivez-vous</h1>
+
+        {% if form.non_field_errors %}
+          <div class="alert" role="alert">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate class="form">
+          {% csrf_token %}
+
+          <div class="field">
+            <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <div class="alert" role="alert">{{ form.username.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- If you kept email in the form, keep it here.
+               If wireframe does not require it, you can remove email from the form. -->
+          {% if form.email %}
+            <div class="field">
+              <label for="{{ form.email.id_for_label }}">Email</label>
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="alert" role="alert">{{ form.email.errors }}</div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <div class="field">
+            <label for="{{ form.password1.id_for_label }}">Mot de passe</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+              <div class="alert" role="alert">{{ form.password1.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.password2.id_for_label }}">Confirmer mot de passe</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+              <div class="alert" role="alert">{{ form.password2.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="card-actions center gap">
+            <a class="btn btn-secondary" href="{% url 'home' %}">Retourner</a>
+            <button class="btn" type="submit">S'inscrire</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+{% endblock %}

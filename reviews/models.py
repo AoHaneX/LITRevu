@@ -9,7 +9,13 @@ class Ticket(models.Model):
     description = models.CharField(max_length=2048, blank=True)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="tickets",
+    )
 
+    time_created = models.DateTimeField(auto_now_add=True)
 
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
@@ -19,8 +25,14 @@ class Review(models.Model):
     headline = models.CharField(max_length=128)
     body = models.CharField(max_length=8192, blank=True)
     user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="reviews",
+    )
     time_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.title
 
 
 class UserFollows(models.Model):
@@ -39,3 +51,5 @@ class UserFollows(models.Model):
     class Meta:
         # Prevent duplicate follow relationships.
         unique_together = ("user", "followed_user")
+    def __str__(self) -> str:
+        return f"{self.user} -> {self.followed_user}"
