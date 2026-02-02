@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Page d'accueil | LITReview{% endblock %}
+
+{% block content %}
+  <div class="frame">
+    <div class="frame-title">Page d'accueil</div>
+
+    <div class="frame-body two-cols">
+      <!-- Left column: sign up CTA -->
+      <section class="card" aria-labelledby="signup-cta-title">
+        <h1 id="signup-cta-title" class="card-title">Inscrivez-vous maintenant</h1>
+
+        <div class="card-actions">
+          <a class="btn" href="{% url 'signup' %}">S'inscrire</a>
+        </div>
+      </section>
+
+      <!-- Right column: login form -->
+      <section class="card" aria-labelledby="login-title">
+        <h2 id="login-title" class="card-title">Connectez-vous</h2>
+
+        {% if form.non_field_errors %}
+          <div class="alert" role="alert">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <!-- We keep the form accessible: labels + errors near fields -->
+        <form method="post" novalidate class="form">
+          {% csrf_token %}
+
+          <div class="field">
+            <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <div class="alert" role="alert">{{ form.username.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.password.id_for_label }}">Mot de passe</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+              <div class="alert" role="alert">{{ form.password.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="card-actions right">
+            <button class="btn" type="submit">Se connecter</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+{% endblock %}

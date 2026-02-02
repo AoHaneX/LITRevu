@@ -1,0 +1,28 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}LITReview{% endblock %}</title>
+
+  <!-- Main stylesheet (simple layout close to wireframes) -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+  <!-- Skip link for keyboard users -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <!-- Visible header title (wireframe style) -->
+    <div class="header-inner">
+      <div class="brand" aria-label="Website name">LITReview</div>
+    </div>
+  </header>
+
+  <main id="main-content" class="page">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
