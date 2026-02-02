@@ -25,19 +25,7 @@
               <div class="alert" role="alert">{{ form.username.errors }}</div>
             {% endif %}
           </div>
-
-          <!-- If you kept email in the form, keep it here.
-               If wireframe does not require it, you can remove email from the form. -->
-          {% if form.email %}
-            <div class="field">
-              <label for="{{ form.email.id_for_label }}">Email</label>
-              {{ form.email }}
-              {% if form.email.errors %}
-                <div class="alert" role="alert">{{ form.email.errors }}</div>
-              {% endif %}
-            </div>
-          {% endif %}
-
+          
           <div class="field">
             <label for="{{ form.password1.id_for_label }}">Mot de passe</label>
             {{ form.password1 }}

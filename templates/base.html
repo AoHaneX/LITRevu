@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}LITReview{% endblock %}</title>
 
-  <!-- Main stylesheet (simple layout close to wireframes) -->
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
@@ -15,11 +15,32 @@
   <a class="skip-link" href="#main-content">Skip to main content</a>
 
   <header class="site-header">
-    <!-- Visible header title (wireframe style) -->
-    <div class="header-inner">
-      <div class="brand" aria-label="Website name">LITReview</div>
+  <div class="header-inner">
+
+    <!-- Left spacer (empty on purpose) -->
+    <div class="header-left"></div>
+
+    <!-- Center brand -->
+    <div class="brand">LITReview</div>
+
+    <!-- Right auth area -->
+    <div class="auth-area">
+      {% if user.is_authenticated %}
+        <span class="user-info">
+          Connecté en tant que <strong>{{ user.username }}</strong>
+        </span>
+
+        <form method="post" action="{% url 'logout' %}" class="logout-form">
+          {% csrf_token %}
+          <button type="submit" class="btn-link">Se déconnecter</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="nav-link">Se connecter</a>
+      {% endif %}
     </div>
-  </header>
+
+  </div>
+</header>
 
   <main id="main-content" class="page">
     {% block content %}{% endblock %}
