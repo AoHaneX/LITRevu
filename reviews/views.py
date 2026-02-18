@@ -129,6 +129,13 @@ class ReviewUpdateView(LoginRequiredMixin, IsOwnerMixin, UpdateView):
     template_name = "reviews/review_form.html"
     success_url = reverse_lazy("home")
     success_message = "Critique modifiée avec succès."
+    def get_context_data(self, **kwargs):
+        """
+        Add the related ticket to the template context to display a preview.
+        """
+        context = super().get_context_data(**kwargs)
+        context["ticket"] = self.object.ticket
+        return context
 
 
 class ReviewDeleteView(LoginRequiredMixin, IsOwnerMixin, DeleteView):
@@ -289,3 +296,50 @@ class PostsView(LoginRequiredMixin, TemplateView):
         )
 
         return context
+    
+class TicketReviewCreateView(LoginRequiredMixin, View):
+    """
+    Create a Ticket and a Review in a single form submission.
+    """
+    template_name = "reviews/ticket_review_form.html"
+
+    def get(self, request):
+        """
+        Display empty forms for both Ticket and Review.
+        """
+        ticket_form = TicketForm()
+        review_form = ReviewForm()
+        return render(
+            request,
+            self.template_name,
+            {"ticket_form": ticket_form, "review_form": review_form},
+        )
+
+    def post(self, request):
+        """
+        Validate both forms and create Ticket + Review in one transaction.
+        """
+        ticket_form = TicketForm(request.POST, request.FILES)
+        review_form = ReviewForm(request.POST)
+
+        if ticket_form.is_valid() and review_form.is_valid():
+            # Save ticket
+            ticket = ticket_form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+
+            # Save review linked to the newly created ticket
+            review = review_form.save(commit=False)
+            review.user = request.user
+            review.ticket = ticket
+            review.save()
+
+            messages.success(request, "Billet et critique créés avec succès.")
+            return redirect("posts")
+
+        # If at least one form is invalid, show errors
+        return render(
+            request,
+            self.template_name,
+            {"ticket_form": ticket_form, "review_form": review_form},
+        )

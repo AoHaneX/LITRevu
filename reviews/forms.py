@@ -3,6 +3,9 @@ from django import forms
 from .models import Ticket, Review
 
 
+RATING_CHOICES = [(i, str(i)) for i in range(6)]
+
+
 class TicketForm(forms.ModelForm):
     """
     Form used to create or update a Ticket.
@@ -17,6 +20,7 @@ class TicketForm(forms.ModelForm):
         }
 
 
+
 class ReviewForm(forms.ModelForm):
     """
     Form used to create or update a Review.
@@ -24,9 +28,10 @@ class ReviewForm(forms.ModelForm):
     """
     class Meta:
         model = Review
-        fields = ("rating", "headline", "body")
+        fields = ("headline", "rating", "body")
         widgets = {
             "headline": forms.TextInput(attrs={"autocomplete": "off"}),
+            "rating": forms.RadioSelect(choices=RATING_CHOICES),
             "body": forms.Textarea(attrs={"rows": 7}),
         }
 

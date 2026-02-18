@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Créer une critique | LITReview{% endblock %}
+
+{% block content %}
+  <div class="frame">
+    <div class="frame-title">Créer une critique</div>
+
+    <div class="frame-body one-col">
+      <section class="card card-narrow" aria-labelledby="page-title">
+        <h1 id="page-title" class="card-title">Créer une critique</h1>
+
+        {% if ticket_form.non_field_errors %}
+          <div class="alert" role="alert">{{ ticket_form.non_field_errors }}</div>
+        {% endif %}
+        {% if review_form.non_field_errors %}
+          <div class="alert" role="alert">{{ review_form.non_field_errors }}</div>
+        {% endif %}
+
+        <!-- enctype is required because Ticket can include an image -->
+        <form method="post" enctype="multipart/form-data" class="form" novalidate>
+          {% csrf_token %}
+
+          <fieldset>
+            <legend>Livre / Article</legend>
+
+            <div class="field">
+              <label for="{{ ticket_form.title.id_for_label }}">Titre</label>
+              {{ ticket_form.title }}
+              {% if ticket_form.title.errors %}
+                <div class="alert" role="alert">{{ ticket_form.title.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <label for="{{ ticket_form.description.id_for_label }}">Description</label>
+              {{ ticket_form.description }}
+              {% if ticket_form.description.errors %}
+                <div class="alert" role="alert">{{ ticket_form.description.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <label for="{{ ticket_form.image.id_for_label }}">Image</label>
+              {{ ticket_form.image }}
+              {% if ticket_form.image.errors %}
+                <div class="alert" role="alert">{{ ticket_form.image.errors }}</div>
+              {% endif %}
+            </div>
+          </fieldset>
+
+          <hr>
+
+          <fieldset>
+            <legend>Critique</legend>
+
+            <div class="field">
+              <label for="{{ review_form.headline.id_for_label }}">Titre</label>
+              {{ review_form.headline }}
+              {% if review_form.headline.errors %}
+                <div class="alert" role="alert">{{ review_form.headline.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <fieldset>
+                <legend>Note</legend>
+                {{ review_form.rating }}
+                {% if review_form.rating.errors %}
+                  <div class="alert" role="alert">{{ review_form.rating.errors }}</div>
+                {% endif %}
+              </fieldset>
+            </div>
+
+            <div class="field">
+              <label for="{{ review_form.body.id_for_label }}">Commentaire</label>
+              {{ review_form.body }}
+              {% if review_form.body.errors %}
+                <div class="alert" role="alert">{{ review_form.body.errors }}</div>
+              {% endif %}
+            </div>
+          </fieldset>
+
+          <div class="card-actions right">
+            <button class="btn" type="submit">Envoyer</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+{% endblock %}
