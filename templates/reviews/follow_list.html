@@ -2,117 +2,116 @@
 {% block title %}Abonnements | LITReview{% endblock %}
 
 {% block content %}
-  <div class="frame">
-    <div class="frame-title">Abonnements</div>
+<div class="frame">
+  <div class="frame-title">Abonnements</div>
 
-    <div class="frame-body">
-      <!-- Follow by username -->
-      <section class="card" aria-labelledby="follow-form-title">
-        <h1 id="follow-form-title" class="card-title">Suivre un utilisateur</h1>
+  <div class="frame-body">
+    <!-- Follow by username -->
+    <section class="card" aria-labelledby="follow-form-title">
+      <h1 id="follow-form-title" class="card-title">Suivre un utilisateur</h1>
 
-        <form method="post" action="{% url 'follow_add' %}" class="form" novalidate>
-          {% csrf_token %}
-
-          <div class="field">
-            <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
-            {{ form.username }}
-            {% if form.username.errors %}
-              <div class="alert" role="alert">{{ form.username.errors }}</div>
-            {% endif %}
-          </div>
-
-          <div class="card-actions right">
-            <button class="btn" type="submit">Suivre</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- Following list -->
-      <section class="card" aria-labelledby="following-title" style="margin-top: 18px;">
-        <h2 id="following-title" class="card-title" style="text-align:left;">Utilisateurs suivis</h2>
-
-        {% if following_relations %}
-          <ul>
-            {% for rel in following_relations %}
-              <li style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
-                <span>{{ rel.followed_user.username }}</span>
-
-                <!-- Unfollow must be POST -->
-                <form method="post" action="{% url 'follow_remove' rel.id %}">
-                  {% csrf_token %}
-                  <button type="submit" class="btn-link">Ne plus suivre</button>
-                </form>
-              </li>
-            {% endfor %}
-          </ul>
-        {% else %}
-          <p>Vous ne suivez encore personne.</p>
-        {% endif %}
-      </section>
-
-      <!-- Suggestions + dynamic filter -->
-      <section class="card" aria-labelledby="suggested-title" style="margin-top: 18px;">
-        <h2 id="suggested-title" class="card-title" style="text-align:left;">Suggestions</h2>
+      <form method="post" action="{% url 'follow_add' %}" class="form" novalidate>
+        {% csrf_token %}
 
         <div class="field">
-          <label for="user-filter">Rechercher un utilisateur</label>
-          <input id="user-filter" type="text" placeholder="Tapez un nom..." autocomplete="off">
+          <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+          {{ form.username }}
+          {% if form.username.errors %}
+          <div class="alert" role="alert">{{ form.username.errors }}</div>
+          {% endif %}
         </div>
 
-        {% if suggested_users %}
-          <ul id="suggested-users-list">
-            {% for u in suggested_users %}
-              <li class="suggested-user-row"
-                  data-username="{{ u.username|lower }}"
-                  style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
-                <span class="suggested-username">{{ u.username }}</span>
+        <div class="card-actions right">
+          <button class="btn" type="submit">Suivre</button>
+        </div>
+      </form>
+    </section>
 
-                <!-- Follow must be POST -->
-                <form method="post" action="{% url 'follow_add' %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="username" value="{{ u.username }}">
-                  <button type="submit" class="btn">Suivre</button>
-                </form>
-              </li>
-            {% endfor %}
-          </ul>
+    <!-- Following list -->
+    <section class="card" aria-labelledby="following-title" style="margin-top: 18px;">
+      <h2 id="following-title" class="card-title" style="text-align:left;">Utilisateurs suivis</h2>
 
-          <p id="no-results" style="display:none;">Aucun utilisateur ne correspond à votre recherche.</p>
-        {% else %}
-          <p>Aucune suggestion pour le moment.</p>
-        {% endif %}
-      </section>
-    </div>
+      {% if following_relations %}
+      <ul>
+        {% for rel in following_relations %}
+        <li style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <span>{{ rel.followed_user.username }}</span>
+
+          <!-- Unfollow must be POST -->
+          <form method="post" action="{% url 'follow_remove' rel.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-link">Ne plus suivre</button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>Vous ne suivez encore personne.</p>
+      {% endif %}
+    </section>
+
+    <!-- Suggestions + dynamic filter -->
+    <section class="card" aria-labelledby="suggested-title" style="margin-top: 18px;">
+      <h2 id="suggested-title" class="card-title" style="text-align:left;">Suggestions</h2>
+
+      <div class="field">
+        <label for="user-filter">Rechercher un utilisateur</label>
+        <input id="user-filter" type="text" placeholder="Tapez un nom..." autocomplete="off">
+      </div>
+
+      {% if suggested_users %}
+      <ul id="suggested-users-list">
+        {% for u in suggested_users %}
+        <li class="suggested-user-row" data-username="{{ u.username|lower }}"
+          style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <span class="suggested-username">{{ u.username }}</span>
+
+          <!-- Follow must be POST -->
+          <form method="post" action="{% url 'follow_add' %}">
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{ u.username }}">
+            <button type="submit" class="btn">Suivre</button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <p id="no-results" style="display:none;">Aucun utilisateur ne correspond à votre recherche.</p>
+      {% else %}
+      <p>Aucune suggestion pour le moment.</p>
+      {% endif %}
+    </section>
   </div>
+</div>
 
-  <script>
-    // Client-side filtering: no server calls, only hides/shows already loaded users.
-    (function () {
-      const input = document.getElementById("user-filter");
-      const list = document.getElementById("suggested-users-list");
-      const noResults = document.getElementById("no-results");
+<script>
+  // Client-side filtering: no server calls, only hides/shows already loaded users.
+  (function () {
+    const input = document.getElementById("user-filter");
+    const list = document.getElementById("suggested-users-list");
+    const noResults = document.getElementById("no-results");
 
-      if (!input || !list) return;
+    if (!input || !list) return;
 
-      const rows = Array.from(list.querySelectorAll(".suggested-user-row"));
+    const rows = Array.from(list.querySelectorAll(".suggested-user-row"));
 
-      function filterRows() {
-        const query = (input.value || "").trim().toLowerCase();
-        let visibleCount = 0;
+    function filterRows() {
+      const query = (input.value || "").trim().toLowerCase();
+      let visibleCount = 0;
 
-        rows.forEach((row) => {
-          const username = row.getAttribute("data-username") || "";
-          const isVisible = username.includes(query);
-          row.style.display = isVisible ? "flex" : "none";
-          if (isVisible) visibleCount += 1;
-        });
+      rows.forEach((row) => {
+        const username = row.getAttribute("data-username") || "";
+        const isVisible = username.includes(query);
+        row.style.display = isVisible ? "flex" : "none";
+        if (isVisible) visibleCount += 1;
+      });
 
-        if (noResults) {
-          noResults.style.display = visibleCount === 0 ? "block" : "none";
-        }
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 ? "block" : "none";
       }
+    }
 
-      input.addEventListener("input", filterRows);
-    })();
-  </script>
+    input.addEventListener("input", filterRows);
+  })();
+</script>
 {% endblock %}
