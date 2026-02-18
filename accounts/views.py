@@ -2,16 +2,23 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
 from .forms import SignupForm
 
 
 class HomeLoginView(LoginView):
     """
-    Public home page that includes the login form (wireframe #1).
-    Using Django's LoginView keeps authentication secure and simple.
+    Home page:
+    - If user is authenticated → redirect to posts
+    - Otherwise → display the login form (and the signup panel in the template)
     """
     template_name = "accounts/home.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("posts")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class SignupView(CreateView):

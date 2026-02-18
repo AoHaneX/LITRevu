@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Review | LITReview{% endblock %}
+{% block title %}Critique | LITReview{% endblock %}
 
 {% block content %}
   <div class="frame">
-    <div class="frame-title">Review</div>
+    <div class="frame-title">Créer une critique</div>
 
     <div class="frame-body one-col">
       <section class="card card-narrow" aria-labelledby="review-title">
@@ -12,7 +12,34 @@
         </h1>
 
         {% if ticket %}
-          <p><strong>Billet :</strong> {{ ticket.title }}</p>
+          <div class="card" aria-label="Ticket preview" style="margin-bottom: 16px;">
+            <p><strong>Vous êtes en train de poster en réponse à</strong></p>
+
+            <div style="display:flex; justify-content:space-between; gap:12px;">
+              <div>
+                <p style="margin:0;">
+                  <strong>{{ ticket.user.username }}</strong> a demandé une critique
+                </p>
+              </div>
+              <div style="font-size: 12px;">
+                {{ ticket.time_created }}
+              </div>
+            </div>
+
+            <p style="margin-top:10px;"><strong>{{ ticket.title }}</strong></p>
+
+            {% if ticket.description %}
+              <p>{{ ticket.description }}</p>
+            {% endif %}
+
+            {% if ticket.image %}
+              <img
+                src="{{ ticket.image.url }}"
+                alt="Image du billet {{ ticket.title }}"
+                style="max-width: 160px; height: auto; border-radius: 10px; margin-top: 10px;"
+              >
+            {% endif %}
+          </div>
         {% endif %}
 
         {% if form.non_field_errors %}
@@ -23,19 +50,21 @@
           {% csrf_token %}
 
           <div class="field">
-            <label for="{{ form.rating.id_for_label }}">Note (0 à 5)</label>
-            {{ form.rating }}
-            {% if form.rating.errors %}
-              <div class="alert" role="alert">{{ form.rating.errors }}</div>
-            {% endif %}
-          </div>
-
-          <div class="field">
             <label for="{{ form.headline.id_for_label }}">Titre</label>
             {{ form.headline }}
             {% if form.headline.errors %}
               <div class="alert" role="alert">{{ form.headline.errors }}</div>
             {% endif %}
+          </div>
+
+          <div class="field">
+            <fieldset>
+              <legend>Note</legend>
+              {{ form.rating }}
+              {% if form.rating.errors %}
+                <div class="alert" role="alert">{{ form.rating.errors }}</div>
+              {% endif %}
+            </fieldset>
           </div>
 
           <div class="field">
@@ -46,9 +75,8 @@
             {% endif %}
           </div>
 
-          <div class="card-actions center gap">
-            <a class="btn btn-secondary" href="{% url 'home' %}">Retourner</a>
-            <button class="btn" type="submit">Valider</button>
+          <div class="card-actions right">
+            <button class="btn" type="submit">{% if object %}Enregistrer{% else %}Envoyer{% endif %}</button>
           </div>
         </form>
       </section>

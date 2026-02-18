@@ -1,11 +1,19 @@
 from django.urls import path
 
 from .views import (
-    TicketListView, ReviewListView,
-    TicketCreateView, TicketUpdateView, TicketDeleteView,
-    ReviewCreateView, ReviewUpdateView, ReviewDeleteView,
-    FollowListView, FollowAddView, FollowRemoveView,
-    PostsView
+    TicketListView,
+    ReviewListView,
+    TicketCreateView,
+    TicketUpdateView,
+    TicketDeleteView,
+    ReviewCreateView,
+    ReviewUpdateView,
+    ReviewDeleteView,
+    FollowListView,
+    FollowAddView,
+    FollowRemoveView,
+    PostsView,
+    TicketReviewCreateView,
 )
 
 urlpatterns = [
@@ -13,18 +21,26 @@ urlpatterns = [
     path("ticket/create/", TicketCreateView.as_view(), name="ticket_create"),
     path("ticket/<int:pk>/edit/", TicketUpdateView.as_view(), name="ticket_edit"),
     path("ticket/<int:pk>/delete/", TicketDeleteView.as_view(), name="ticket_delete"),
-
     # Reviews
-    path("review/create/<int:ticket_id>/", ReviewCreateView.as_view(), name="review_create"),
+    path(
+        "review/create/<int:ticket_id>/",
+        ReviewCreateView.as_view(),
+        name="review_create",
+    ),
     path("review/<int:pk>/edit/", ReviewUpdateView.as_view(), name="review_edit"),
     path("review/<int:pk>/delete/", ReviewDeleteView.as_view(), name="review_delete"),
     path("ticket/", TicketListView.as_view(), name="ticket_list"),
     path("review/", ReviewListView.as_view(), name="review_list"),
-
-    #Users
+    path(
+        "review/create/", TicketReviewCreateView.as_view(), name="review_create_ticket"
+    ),
+    # Users
     path("follow/", FollowListView.as_view(), name="follow_list"),
     path("follow/add/", FollowAddView.as_view(), name="follow_add"),
-    path("follow/remove/<int:follow_id>/", FollowRemoveView.as_view(), name="follow_remove"),
-
+    path(
+        "follow/remove/<int:follow_id>/",
+        FollowRemoveView.as_view(),
+        name="follow_remove",
+    ),
     path("posts/", PostsView.as_view(), name="posts"),
 ]

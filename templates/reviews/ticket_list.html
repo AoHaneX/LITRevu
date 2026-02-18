@@ -2,47 +2,44 @@
 {% block title %}Mes billets | LITReview{% endblock %}
 
 {% block content %}
-  <div class="frame">
-    <div class="frame-title">Mes billets</div>
+<div class="frame">
+  <div class="frame-title">Mes billets</div>
 
-    <div class="frame-body">
-      <div class="card-actions right">
-        <a class="btn" href="{% url 'ticket_create' %}">Créer un billet</a>
-      </div>
-
-      {% if tickets %}
-        <div class="two-cols">
-          {% for ticket in tickets %}
-            <section class="card" aria-labelledby="ticket-{{ ticket.id }}">
-              <h2 id="ticket-{{ ticket.id }}" class="card-title" style="text-align:left;">
-                {{ ticket.title }}
-              </h2>
-
-              {% if ticket.image %}
-                <img
-                  src="{{ ticket.image.url }}"
-                  alt="Image du billet {{ ticket.title }}"
-                  style="max-width: 100%; height: auto; border-radius: 10px;"
-                >
-              {% endif %}
-
-              {% if ticket.description %}
-                <p>{{ ticket.description }}</p>
-              {% endif %}
-
-              <p><strong>Créé le :</strong> {{ ticket.time_created }}</p>
-
-              <div class="card-actions gap">
-                <a class="btn btn-secondary" href="{% url 'ticket_edit' ticket.id %}">Modifier</a>
-                <a class="btn btn-secondary" href="{% url 'ticket_delete' ticket.id %}">Supprimer</a>
-                <a class="btn" href="{% url 'review_create' ticket.id %}">Créer une critique</a>
-              </div>
-            </section>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p>Vous n’avez encore créé aucun billet.</p>
-      {% endif %}
+  <div class="frame-body">
+    <div class="card-actions right">
+      <a class="btn" href="{% url 'ticket_create' %}">Créer un billet</a>
     </div>
+
+    {% if tickets %}
+    <div class="two-cols">
+      {% for ticket in tickets %}
+      <section class="card" aria-labelledby="ticket-{{ ticket.id }}">
+        <h2 id="ticket-{{ ticket.id }}" class="card-title" style="text-align:left;">
+          {{ ticket.title }}
+        </h2>
+
+        {% if ticket.image %}
+        <img src="{{ ticket.image.url }}" alt="Image du billet {{ ticket.title }}"
+          style="max-width: 100%; height: auto; border-radius: 10px;">
+        {% endif %}
+
+        {% if ticket.description %}
+        <p>{{ ticket.description }}</p>
+        {% endif %}
+
+        <p><strong>Créé le :</strong> {{ ticket.time_created }}</p>
+
+        <div class="card-actions gap">
+          <a class="btn btn-secondary" href="{% url 'ticket_edit' ticket.id %}">Modifier</a>
+          <a class="btn btn-secondary" href="{% url 'ticket_delete' ticket.id %}">Supprimer</a>
+          <a class="btn" href="{% url 'review_create' ticket.id %}">Créer une critique</a>
+        </div>
+      </section>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>Vous n’avez encore créé aucun billet.</p>
+    {% endif %}
   </div>
+</div>
 {% endblock %}

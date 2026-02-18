@@ -52,7 +52,7 @@
 
           <div class="card-actions right">
             <!-- Creating a review requires a ticket_id, so we guide the user to tickets -->
-            <a class="btn" href="{% url 'ticket_list' %}">Créer une critique</a>
+            <a class="btn" href="{% url 'review_create_ticket' %}">Créer une critique</a>
           </div>
 
           {% if reviews %}

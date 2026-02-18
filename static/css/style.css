@@ -331,3 +331,29 @@ ul {
 li {
   margin: 8px 0;
 }
+
+/* Rating radios layout (wireframe-like) */
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+legend {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+#id_rating {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#id_rating label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
