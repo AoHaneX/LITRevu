@@ -2,23 +2,23 @@
 {% block title %}Supprimer ticket | LITReview{% endblock %}
 
 {% block content %}
-  <div class="frame">
-    <div class="frame-title">Suppression</div>
+<div class="frame">
+  <div class="frame-title">Suppression</div>
 
-    <div class="frame-body one-col">
-      <section class="card card-narrow" aria-labelledby="delete-title">
-        <h1 id="delete-title" class="card-title">Supprimer le billet</h1>
+  <div class="frame-body one-col">
+    <section class="card card-narrow" aria-labelledby="delete-title">
+      <h1 id="delete-title" class="card-title">Supprimer le billet</h1>
 
-        <p>Confirmez-vous la suppression du billet : <strong>{{ object.title }}</strong> ?</p>
+      <p>Confirmez-vous la suppression du billet : <strong>{{ object.title }}</strong> ?</p>
 
-        <form method="post" class="form">
-          {% csrf_token %}
-          <div class="card-actions center gap">
-            <a class="btn btn-secondary" href="{% url 'home' %}">Annuler</a>
-            <button class="btn" type="submit">Supprimer</button>
-          </div>
-        </form>
-      </section>
-    </div>
+      <form method="post" class="form">
+        {% csrf_token %}
+        <div class="card-actions center gap">
+          <a class="btn btn-secondary" href="{% url 'home' %}">Annuler</a>
+          <button class="btn" type="submit">Supprimer</button>
+        </div>
+      </form>
+    </section>
   </div>
+</div>
 {% endblock %}

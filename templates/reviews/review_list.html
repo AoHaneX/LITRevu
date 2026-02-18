@@ -2,46 +2,46 @@
 {% block title %}Mes critiques | LITReview{% endblock %}
 
 {% block content %}
-  <div class="frame">
-    <div class="frame-title">Mes critiques</div>
+<div class="frame">
+  <div class="frame-title">Mes critiques</div>
 
-    <div class="frame-body">
-      <div class="card-actions right">
-        <!-- Creating a review requires a ticket_id, so we redirect users to tickets list -->
-        <a class="btn" href="{% url 'ticket_list' %}">Créer une critique</a>
-      </div>
-
-      {% if reviews %}
-        <div class="two-cols">
-          {% for review in reviews %}
-            <section class="card" aria-labelledby="review-{{ review.id }}">
-              <h2 id="review-{{ review.id }}" class="card-title" style="text-align:left;">
-                {{ review.headline }}
-              </h2>
-
-              <p><strong>Ticket :</strong> {{ review.ticket.title }}</p>
-              <p><strong>Note :</strong> {{ review.rating }}/5</p>
-
-              {% if review.body %}
-                <p>{{ review.body }}</p>
-              {% endif %}
-
-              <p><strong>Créée le :</strong> {{ review.time_created }}</p>
-
-              <div class="card-actions gap">
-                <a class="btn btn-secondary" href="{% url 'review_edit' review.id %}">Modifier</a>
-                <a class="btn btn-secondary" href="{% url 'review_delete' review.id %}">Supprimer</a>
-              </div>
-            </section>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p>Vous n’avez encore créé aucune critique.</p>
-        <p>
-          Pour créer une critique, commencez par choisir un billet :
-          <a href="{% url 'ticket_list' %}">voir mes billets</a>.
-        </p>
-      {% endif %}
+  <div class="frame-body">
+    <div class="card-actions right">
+      <!-- Creating a review requires a ticket_id, so we redirect users to tickets list -->
+      <a class="btn" href="{% url 'ticket_list' %}">Créer une critique</a>
     </div>
+
+    {% if reviews %}
+    <div class="two-cols">
+      {% for review in reviews %}
+      <section class="card" aria-labelledby="review-{{ review.id }}">
+        <h2 id="review-{{ review.id }}" class="card-title" style="text-align:left;">
+          {{ review.headline }}
+        </h2>
+
+        <p><strong>Ticket :</strong> {{ review.ticket.title }}</p>
+        <p><strong>Note :</strong> {{ review.rating }}/5</p>
+
+        {% if review.body %}
+        <p>{{ review.body }}</p>
+        {% endif %}
+
+        <p><strong>Créée le :</strong> {{ review.time_created }}</p>
+
+        <div class="card-actions gap">
+          <a class="btn btn-secondary" href="{% url 'review_edit' review.id %}">Modifier</a>
+          <a class="btn btn-secondary" href="{% url 'review_delete' review.id %}">Supprimer</a>
+        </div>
+      </section>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>Vous n’avez encore créé aucune critique.</p>
+    <p>
+      Pour créer une critique, commencez par choisir un billet :
+      <a href="{% url 'ticket_list' %}">voir mes billets</a>.
+    </p>
+    {% endif %}
   </div>
+</div>
 {% endblock %}

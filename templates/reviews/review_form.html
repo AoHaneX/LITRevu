@@ -2,84 +2,81 @@
 {% block title %}Critique | LITReview{% endblock %}
 
 {% block content %}
-  <div class="frame">
-    <div class="frame-title">Créer une critique</div>
+<div class="frame">
+  <div class="frame-title">Créer une critique</div>
 
-    <div class="frame-body one-col">
-      <section class="card card-narrow" aria-labelledby="review-title">
-        <h1 id="review-title" class="card-title">
-          {% if object %}Modifier une critique{% else %}Créer une critique{% endif %}
-        </h1>
+  <div class="frame-body one-col">
+    <section class="card card-narrow" aria-labelledby="review-title">
+      <h1 id="review-title" class="card-title">
+        {% if object %}Modifier une critique{% else %}Créer une critique{% endif %}
+      </h1>
 
-        {% if ticket %}
-          <div class="card" aria-label="Ticket preview" style="margin-bottom: 16px;">
-            <p><strong>Vous êtes en train de poster en réponse à</strong></p>
+      {% if ticket %}
+      <div class="card" aria-label="Ticket preview" style="margin-bottom: 16px;">
+        <p><strong>Vous êtes en train de poster en réponse à</strong></p>
 
-            <div style="display:flex; justify-content:space-between; gap:12px;">
-              <div>
-                <p style="margin:0;">
-                  <strong>{{ ticket.user.username }}</strong> a demandé une critique
-                </p>
-              </div>
-              <div style="font-size: 12px;">
-                {{ ticket.time_created }}
-              </div>
-            </div>
-
-            <p style="margin-top:10px;"><strong>{{ ticket.title }}</strong></p>
-
-            {% if ticket.description %}
-              <p>{{ ticket.description }}</p>
-            {% endif %}
-
-            {% if ticket.image %}
-              <img
-                src="{{ ticket.image.url }}"
-                alt="Image du billet {{ ticket.title }}"
-                style="max-width: 160px; height: auto; border-radius: 10px; margin-top: 10px;"
-              >
-            {% endif %}
+        <div style="display:flex; justify-content:space-between; gap:12px;">
+          <div>
+            <p style="margin:0;">
+              <strong>{{ ticket.user.username }}</strong> a demandé une critique
+            </p>
           </div>
+          <div style="font-size: 12px;">
+            {{ ticket.time_created }}
+          </div>
+        </div>
+
+        <p style="margin-top:10px;"><strong>{{ ticket.title }}</strong></p>
+
+        {% if ticket.description %}
+        <p>{{ ticket.description }}</p>
         {% endif %}
 
-        {% if form.non_field_errors %}
-          <div class="alert" role="alert">{{ form.non_field_errors }}</div>
+        {% if ticket.image %}
+        <img src="{{ ticket.image.url }}" alt="Image du billet {{ ticket.title }}"
+          style="max-width: 160px; height: auto; border-radius: 10px; margin-top: 10px;">
         {% endif %}
+      </div>
+      {% endif %}
 
-        <form method="post" novalidate class="form">
-          {% csrf_token %}
+      {% if form.non_field_errors %}
+      <div class="alert" role="alert">{{ form.non_field_errors }}</div>
+      {% endif %}
 
-          <div class="field">
-            <label for="{{ form.headline.id_for_label }}">Titre</label>
-            {{ form.headline }}
-            {% if form.headline.errors %}
-              <div class="alert" role="alert">{{ form.headline.errors }}</div>
+      <form method="post" novalidate class="form">
+        {% csrf_token %}
+
+        <div class="field">
+          <label for="{{ form.headline.id_for_label }}">Titre</label>
+          {{ form.headline }}
+          {% if form.headline.errors %}
+          <div class="alert" role="alert">{{ form.headline.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <fieldset>
+            <legend>Note</legend>
+            {{ form.rating }}
+            {% if form.rating.errors %}
+            <div class="alert" role="alert">{{ form.rating.errors }}</div>
             {% endif %}
-          </div>
+          </fieldset>
+        </div>
 
-          <div class="field">
-            <fieldset>
-              <legend>Note</legend>
-              {{ form.rating }}
-              {% if form.rating.errors %}
-                <div class="alert" role="alert">{{ form.rating.errors }}</div>
-              {% endif %}
-            </fieldset>
-          </div>
+        <div class="field">
+          <label for="{{ form.body.id_for_label }}">Commentaire</label>
+          {{ form.body }}
+          {% if form.body.errors %}
+          <div class="alert" role="alert">{{ form.body.errors }}</div>
+          {% endif %}
+        </div>
 
-          <div class="field">
-            <label for="{{ form.body.id_for_label }}">Commentaire</label>
-            {{ form.body }}
-            {% if form.body.errors %}
-              <div class="alert" role="alert">{{ form.body.errors }}</div>
-            {% endif %}
-          </div>
-
-          <div class="card-actions right">
-            <button class="btn" type="submit">{% if object %}Enregistrer{% else %}Envoyer{% endif %}</button>
-          </div>
-        </form>
-      </section>
-    </div>
+        <div class="card-actions right">
+          <button class="btn" type="submit">{% if object %}Enregistrer{% else %}Envoyer{% endif %}</button>
+        </div>
+      </form>
+    </section>
   </div>
+</div>
 {% endblock %}
