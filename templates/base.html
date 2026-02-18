@@ -21,8 +21,8 @@
     <nav class="nav-left" aria-label="Main navigation">
       {% if user.is_authenticated %}
         <a href="#" class="nav-link">Flux</a>
-        <a href="#" class="nav-link">Posts</a>
-        <a href="#" class="nav-link">Abonnements</a>
+        <a href="{% url 'posts' %}" class="nav-link">Posts</a>
+        <a href="{% url 'follow_list' %}" class="nav-link">Abonnements</a>
       {% endif %}
     </nav>
 
@@ -47,7 +47,13 @@
 
   </div>
 </header>
-
+{% if messages %}
+  <section aria-label="Notifications">
+    {% for message in messages %}
+      <div class="alert" role="status">{{ message }}</div>
+    {% endfor %}
+  </section>
+{% endif %}
   <main id="main-content" class="page">
     {% block content %}{% endblock %}
   </main>

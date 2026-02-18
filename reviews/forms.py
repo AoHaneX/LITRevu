@@ -29,3 +29,14 @@ class ReviewForm(forms.ModelForm):
             "headline": forms.TextInput(attrs={"autocomplete": "off"}),
             "body": forms.Textarea(attrs={"rows": 7}),
         }
+
+
+class FollowUserForm(forms.Form):
+    """
+    Simple form to follow a user by their username.
+    """
+    username = forms.CharField(
+        max_length=150,
+        label="Nom d'utilisateur",
+        widget=forms.TextInput(attrs={"autocomplete": "off"})
+    )

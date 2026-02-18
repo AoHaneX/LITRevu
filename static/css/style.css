@@ -13,7 +13,7 @@
   --border: #c7bca8;       /* soft border that still contrasts */
 
   /* Brand / accents */
-  --brand: #1b4d3e;        /* deep green */
+  --brand: #76c2ab;        /* To modif */
   --brand-contrast: #ffffff;
 
   /* Links */
@@ -321,4 +321,13 @@ a:hover { color: var(--link-hover); }
 .user-info {
   font-size: 14px;
   color: var(--muted);
+}
+
+/* Improve list readability */
+ul {
+  padding-left: 18px;
+}
+
+li {
+  margin: 8px 0;
 }

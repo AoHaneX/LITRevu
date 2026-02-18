@@ -127,3 +127,6 @@ LOGIN_REDIRECT_URL = "home"   # name of your home url
 LOGOUT_REDIRECT_URL = "home"  # or "login" if you prefer
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "home"
+# Media files (user uploads)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"

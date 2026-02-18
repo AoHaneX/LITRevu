@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Review | LITReview{% endblock %}
+
+{% block content %}
+  <div class="frame">
+    <div class="frame-title">Review</div>
+
+    <div class="frame-body one-col">
+      <section class="card card-narrow" aria-labelledby="review-title">
+        <h1 id="review-title" class="card-title">
+          {% if object %}Modifier une critique{% else %}Créer une critique{% endif %}
+        </h1>
+
+        {% if ticket %}
+          <p><strong>Billet :</strong> {{ ticket.title }}</p>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+          <div class="alert" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <form method="post" novalidate class="form">
+          {% csrf_token %}
+
+          <div class="field">
+            <label for="{{ form.rating.id_for_label }}">Note (0 à 5)</label>
+            {{ form.rating }}
+            {% if form.rating.errors %}
+              <div class="alert" role="alert">{{ form.rating.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.headline.id_for_label }}">Titre</label>
+            {{ form.headline }}
+            {% if form.headline.errors %}
+              <div class="alert" role="alert">{{ form.headline.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.body.id_for_label }}">Commentaire</label>
+            {{ form.body }}
+            {% if form.body.errors %}
+              <div class="alert" role="alert">{{ form.body.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="card-actions center gap">
+            <a class="btn btn-secondary" href="{% url 'home' %}">Retourner</a>
+            <button class="btn" type="submit">Valider</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+{% endblock %}
