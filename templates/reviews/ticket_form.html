@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Ticket | LITReview{% endblock %}
+
+{% block content %}
+  <div class="frame">
+    <div class="frame-title">Ticket</div>
+
+    <div class="frame-body one-col">
+      <section class="card card-narrow" aria-labelledby="ticket-title">
+        <h1 id="ticket-title" class="card-title">
+          {% if object %}Modifier un billet{% else %}Créer un billet{% endif %}
+        </h1>
+
+        {% if form.non_field_errors %}
+          <div class="alert" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+        {% if object and object.image %}
+        <p>
+          <strong>Image actuelle :</strong><br>
+          <img src="{{ object.image.url }}" alt="Image du billet {{ object.title }}" style="max-width: 100%; height: auto;">
+        </p>
+      {% endif %}
+        <!-- enctype is required for file upload -->
+        <form method="post" enctype="multipart/form-data" novalidate class="form">
+          {% csrf_token %}
+
+          <div class="field">
+            <label for="{{ form.title.id_for_label }}">Titre</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+              <div class="alert" role="alert">{{ form.title.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <div class="alert" role="alert">{{ form.description.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.image.id_for_label }}">Image (optionnel)</label>
+            {{ form.image }}
+            {% if form.image.errors %}
+              <div class="alert" role="alert">{{ form.image.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="card-actions center gap">
+            <a class="btn btn-secondary" href="{% url 'home' %}">Retourner</a>
+            <button class="btn" type="submit">Valider</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+{% endblock %}
