@@ -4,11 +4,13 @@ from django.views import View
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView
+from django.db.models import Exists, OuterRef
+from django.views.generic import ListView, TemplateView
 
 from .forms import TicketForm, ReviewForm, FollowUserForm
 from .models import Ticket, Review, UserFollows
-from django.views.generic import ListView, TemplateView
+from itertools import chain
 
 
 class IsOwnerMixin(UserPassesTestMixin):
@@ -25,6 +27,7 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     """
     Create a new Ticket for the logged-in user.
     """
+
     model = Ticket
     form_class = TicketForm
     template_name = "reviews/ticket_form.html"
@@ -42,6 +45,7 @@ class TicketUpdateView(LoginRequiredMixin, IsOwnerMixin, UpdateView):
     """
     Update an existing Ticket (only allowed for the owner).
     """
+
     model = Ticket
     form_class = TicketForm
     template_name = "reviews/ticket_form.html"
@@ -60,15 +64,18 @@ class TicketDeleteView(LoginRequiredMixin, IsOwnerMixin, DeleteView):
     """
     Delete an existing Ticket (only allowed for the owner).
     """
+
     model = Ticket
     template_name = "reviews/ticket_confirm_delete.html"
     success_url = reverse_lazy("home")
     success_message = "Billet modifié avec succès."
 
+
 class ReviewListView(LoginRequiredMixin, ListView):
     """
     Display the list of reviews created by the current user.
     """
+
     model = Review
     template_name = "reviews/review_list.html"
     context_object_name = "reviews"
@@ -79,17 +86,18 @@ class ReviewListView(LoginRequiredMixin, ListView):
         Return only reviews created by the logged-in user.
         """
         return (
-            Review.objects
-            .filter(user=self.request.user)
+            Review.objects.filter(user=self.request.user)
             .select_related("ticket")
             .order_by("-time_created")
         )
+
 
 class ReviewCreateView(LoginRequiredMixin, CreateView):
     """
     Create a new Review for a given Ticket.
     The ticket is provided via the URL.
     """
+
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_form.html"
@@ -124,11 +132,13 @@ class ReviewUpdateView(LoginRequiredMixin, IsOwnerMixin, UpdateView):
     """
     Update an existing Review (only allowed for the owner).
     """
+
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_form.html"
     success_url = reverse_lazy("home")
     success_message = "Critique modifiée avec succès."
+
     def get_context_data(self, **kwargs):
         """
         Add the related ticket to the template context to display a preview.
@@ -142,17 +152,20 @@ class ReviewDeleteView(LoginRequiredMixin, IsOwnerMixin, DeleteView):
     """
     Delete an existing Review (only allowed for the owner).
     """
+
     model = Review
     template_name = "reviews/review_confirm_delete.html"
     success_url = reverse_lazy("home")
 
     from django.views.generic import ListView
 
+
 class TicketListView(LoginRequiredMixin, ListView):
     """
     Display a list of tickets.
     For now, we show only the current user's tickets.
     """
+
     model = Ticket
     template_name = "reviews/ticket_list.html"
     context_object_name = "tickets"
@@ -164,6 +177,7 @@ class TicketListView(LoginRequiredMixin, ListView):
         """
         return Ticket.objects.filter(user=self.request.user).order_by("-time_created")
 
+
 User = get_user_model()
 
 
@@ -173,6 +187,7 @@ class FollowListView(LoginRequiredMixin, View):
     - following_relations: who the current user follows
     - suggested_users: users that the current user does not follow (excluding self)
     """
+
     template_name = "reviews/follow_list.html"
 
     def get(self, request):
@@ -180,8 +195,7 @@ class FollowListView(LoginRequiredMixin, View):
         Render the follow page with current follow relations and suggestions.
         """
         following_relations = (
-            UserFollows.objects
-            .filter(user=request.user)
+            UserFollows.objects.filter(user=request.user)
             .select_related("followed_user")
             .order_by("followed_user__username")
         )
@@ -189,8 +203,7 @@ class FollowListView(LoginRequiredMixin, View):
         followed_ids = following_relations.values_list("followed_user_id", flat=True)
 
         suggested_users = (
-            User.objects
-            .exclude(id=request.user.id)
+            User.objects.exclude(id=request.user.id)
             .exclude(id__in=followed_ids)
             .order_by("username")
         )
@@ -266,7 +279,7 @@ class FollowRemoveView(LoginRequiredMixin, View):
         relation.delete()
         messages.success(request, f"Vous ne suivez plus {followed_username}.")
         return redirect("follow_list")
-    
+
 
 class PostsView(LoginRequiredMixin, TemplateView):
     """
@@ -274,6 +287,7 @@ class PostsView(LoginRequiredMixin, TemplateView):
     - the current user's tickets
     - the current user's reviews
     """
+
     template_name = "reviews/posts.html"
 
     def get_context_data(self, **kwargs):
@@ -282,25 +296,24 @@ class PostsView(LoginRequiredMixin, TemplateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["tickets"] = (
-            Ticket.objects
-            .filter(user=self.request.user)
-            .order_by("-time_created")
+        context["tickets"] = Ticket.objects.filter(user=self.request.user).order_by(
+            "-time_created"
         )
 
         context["reviews"] = (
-            Review.objects
-            .filter(user=self.request.user)
+            Review.objects.filter(user=self.request.user)
             .select_related("ticket")
             .order_by("-time_created")
         )
 
         return context
-    
+
+
 class TicketReviewCreateView(LoginRequiredMixin, View):
     """
     Create a Ticket and a Review in a single form submission.
     """
+
     template_name = "reviews/ticket_review_form.html"
 
     def get(self, request):
@@ -343,3 +356,53 @@ class TicketReviewCreateView(LoginRequiredMixin, View):
             self.template_name,
             {"ticket_form": ticket_form, "review_form": review_form},
         )
+
+
+class FeedView(LoginRequiredMixin, TemplateView):
+    """
+    Display a feed containing both Tickets and Reviews from:
+    - the current user
+    - users followed by the current user
+    """
+
+    template_name = "reviews/feed.html"
+
+    def get_context_data(self, **kwargs):
+        """
+        Build a mixed list of posts (tickets + reviews) ordered by time.
+        Also annotate tickets with a boolean telling if the current user already reviewed it.
+        """
+        context = super().get_context_data(**kwargs)
+
+        # Users allowed in feed: self + followed users
+        followed_ids = UserFollows.objects.filter(user=self.request.user).values_list(
+            "followed_user_id", flat=True
+        )
+
+        allowed_user_ids = list(followed_ids) + [self.request.user.id]
+
+        # Subquery: does the current user already have a review for this ticket?
+        user_review_exists = Review.objects.filter(
+            ticket=OuterRef("pk"),
+            user=self.request.user,
+        )
+
+        tickets = (
+            Ticket.objects.filter(user_id__in=allowed_user_ids)
+            .annotate(already_reviewed=Exists(user_review_exists))
+            .select_related("user")
+        )
+
+        reviews = Review.objects.filter(user_id__in=allowed_user_ids).select_related(
+            "user", "ticket", "ticket__user"
+        )
+
+        # Mix and sort by creation datetime (descending)
+        posts = sorted(
+            chain(tickets, reviews),
+            key=lambda obj: obj.time_created,
+            reverse=True,
+        )
+
+        context["posts"] = posts
+        return context
