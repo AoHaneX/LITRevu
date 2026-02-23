@@ -1,46 +1,153 @@
 # LITRevu
-Application web Django permettant aux utilisateurs de demander, publier et consulter des critiques de livres et d’articles via un flux personnalisé.
+LITReview est une application web développée avec Django permettant :
 
+* de demander des critiques sur un livre ou un article (Tickets)
 
-## Structure du projet
-- `config/settings.py` : Global Django configuration (apps, database, authentication, templates, static files).
-- `config/urls.py` : Root URL routing of the project.
-- `accounts/models.py` : Custom user model used for authentication.
-- `accounts/views.py` : Views handling login, logout and user registration.
-- `accounts/urls.py` : URL routes for authentication pages.
-- `reviews/models.py` : Core business models (Ticket, Review, UserFollows).
-- `reviews/forms.py` : Forms used to create and edit tickets and reviews.
-- `reviews/views.py` : Views implementing CRUD operations for tickets and reviews.
-- `reviews/urls.py` : URL routes for ticket and review actions.
-- `reviews/admin.py` : Django admin configuration for tickets, reviews and user follows.
-- `templates/base.html` : Base template shared by all pages (layout and navigation bar).
-- `templates/accounts/home.html` : Public home page with login form and signup access.
-- `templates/accounts/signup.html` : User registration page.
-- `templates/reviews/ticket_form.html` : Form page for creating and editing tickets.
-- `templates/reviews/ticket_confirm_delete.html` : Confirmation page for ticket deletion.
-- `templates/reviews/review_form.html` : Form page for creating and editing reviews.
-- `templates/reviews/review_confirm_delete.html` : Confirmation page for review deletion.
-- `static/css/style.css` : Global stylesheet following WCAG accessibility guidelines.
+* de publier des critiques (Reviews)
 
+* de suivre d'autres utilisateurs
 
-## Structure des fichiers principaux
+* de consulter un flux personnalisé combinant billets et critiques
 
-- `config/settings.py` : Configuration globale du projet Django (applications, base de données, authentification, fichiers statiques et médias).
-- `config/urls.py` : Routes principales du projet et inclusion des URLs des différentes applications.
-- `accounts/models.py` : Définition du modèle utilisateur personnalisé utilisé pour l’authentification.
-- `accounts/views.py` : Vues liées à l’inscription, la connexion et la déconnexion des utilisateurs.
-- `accounts/forms.py` : Formulaires d’inscription des utilisateurs.
-- `accounts/urls.py` : Routes pour l’authentification (login, logout, signup).
-- `reviews/models.py` : Modèles métier de l’application (Ticket, Review, UserFollows).
-- `reviews/forms.py` : Formulaires pour la création et la modification des billets et des critiques.
-- `reviews/views.py` : Vues permettant l’ajout, la modification et la suppression des billets et des critiques.
-- `reviews/urls.py` : Routes associées aux opérations CRUD sur les billets et les critiques.
-- `reviews/admin.py` : Configuration de l’interface d’administration Django pour tester et gérer les modèles.
-- `templates/base.html` : Template de base commun à toutes les pages (bandeau, navigation, structure générale).
-- `templates/accounts/home.html` : Page d’accueil publique avec formulaire de connexion et accès à l’inscription.
-- `templates/accounts/signup.html` : Page d’inscription des utilisateurs.
-- `templates/reviews/ticket_form.html` : Page de création et de modification d’un billet.
-- `templates/reviews/ticket_confirm_delete.html` : Page de confirmation de suppression d’un billet.
-- `templates/reviews/review_form.html` : Page de création et de modification d’une critique.
-- `templates/reviews/review_confirm_delete.html` : Page de confirmation de suppression d’une critique.
-- `static/css/style.css` : Feuille de style principale du site, conforme aux recommandations d’accessibilité WCAG.
+* Ce projet correspond au MVP demandé dans le cahier des charges.
+
+## 🚀 Fonctionnalités principales:
+
+### 👤 Authentification:
+
+* Inscription avec modèle utilisateur personnalisé
+
+* Connexion / Déconnexion
+
+* Accès protégé aux pages authentifiées
+
+### 📝 Billets (Tickets)
+
+* Création d’un billet avec image optionnelle
+
+* Modification (réservée à l’auteur)
+
+* Suppression via méthode POST
+
+* Liste des billets personnels
+
+### ⭐ Critiques (Reviews)
+
+* Création d’une critique liée à un billet(Ou création du billet si aucun billet saisit)
+
+* Modification (réservée à l’auteur)
+
+* Suppression via méthode POST
+
+* Aperçu du ticket sur la page de création/modification
+
+### 🔄 Flux
+
+Affichage des billets et critiques :
+
+* de l’utilisateur courant
+
+* des utilisateurs suivis
+
+* Tri par date décroissante
+
+### 👥 Abonnements
+
+* Suivre ou se désabonner d'un utilisateur
+
+* Liste des utilisateurs suivis
+
+* Suggestions d’utilisateurs
+
+* nRecherche dynamique côté client
+
+### 🏗️ Technologies utilisées
+
+* Python 3.13
+
+* Django 6
+
+* SQLite
+
+* HTML5
+
+* CSS personnalisé (sans framework)
+
+* JavaScript (filtrage dynamique)
+
+### ♿ Accessibilité (WCAG)
+
+L’interface respecte les bonnes pratiques WCAG :
+
+Labels associés aux champs de formulaire
+
+Fieldset/legend pour les groupes de radios
+
+Skip link pour navigation clavier
+
+Focus visible
+
+Contraste suffisant
+
+Attributs alt pour les images
+
+Actions sensibles via POST + CSRF
+
+### ⚙️ Installation
+#### 1️⃣ Cloner le repository
+`git clone https://github.com/AoHaneX/LITRevu.git`
+
+`cd LITReview`
+#### 2️⃣ Créer un environnement virtuel
+`python -m venv venv`
+
+Activer l’environnement :
+
+Windows:
+
+`venv\Scripts\activate`
+
+macOS / Linux
+
+`source venv/bin/activate`
+#### 3️⃣ Installer les dépendances
+`pip install -r requirements.txt`
+
+Si le fichier n’existe pas :
+
+`pip install django`
+
+#### 4️⃣ Base de données
+
+Le projet utilise SQLite, voici comment créer une base de données locale:
+```
+python manage.py migrate
+
+python manage.py createsuperuser
+```
+#### 5️⃣ Lancer le serveur
+`python manage.py runserver`
+
+Accéder à l’application par l'url:
+
+http://127.0.0.1:8000/
+
+### 📁 Structure du projet
+```
+WebDjango/
+│
+├── accounts/        # Authentification & utilisateur personnalisé
+├── reviews/         # Tickets, Reviews, Follow, Feed
+├── templates/
+│   ├── accounts/
+│   └── reviews/
+├── static/
+│   └── css/
+├── config/          # Settings & configuration
+└── manage.py
+```
+
+### Auteur:
+STALIN--RENAULT Adrian
+
+*Projet réalisé dans le cadre du parcours OpenClassrooms.*
