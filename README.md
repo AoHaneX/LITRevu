@@ -77,21 +77,21 @@ Affichage des billets et critiques :
 
 ### ♿ Accessibilité (WCAG)
 
-L’interface respecte les bonnes pratiques WCAG :
+* L’interface respecte les bonnes pratiques WCAG :
 
-Labels associés aux champs de formulaire
+* Labels associés aux champs de formulaire
 
-Fieldset/legend pour les groupes de radios
+* Fieldset/legend pour les groupes de radios
 
-Skip link pour navigation clavier
+* Skip link pour navigation clavier
 
-Focus visible
+* Focus visible
 
-Contraste suffisant
+* Contraste suffisant
 
-Attributs alt pour les images
+* Attributs alt pour les images
 
-Actions sensibles via POST + CSRF
+* Actions sensibles via POST + CSRF
 
 ### ⚙️ Installation
 #### 1️⃣ Cloner le repository
