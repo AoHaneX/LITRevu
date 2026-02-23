@@ -14,14 +14,17 @@ from .views import (
     FollowRemoveView,
     PostsView,
     TicketReviewCreateView,
+    FeedView,
 )
 
 urlpatterns = [
     # Tickets (posts)
+    path("ticket/", TicketListView.as_view(), name="ticket_list"),
     path("ticket/create/", TicketCreateView.as_view(), name="ticket_create"),
     path("ticket/<int:pk>/edit/", TicketUpdateView.as_view(), name="ticket_edit"),
     path("ticket/<int:pk>/delete/", TicketDeleteView.as_view(), name="ticket_delete"),
     # Reviews
+    path("review/", ReviewListView.as_view(), name="review_list"),
     path(
         "review/create/<int:ticket_id>/",
         ReviewCreateView.as_view(),
@@ -29,8 +32,7 @@ urlpatterns = [
     ),
     path("review/<int:pk>/edit/", ReviewUpdateView.as_view(), name="review_edit"),
     path("review/<int:pk>/delete/", ReviewDeleteView.as_view(), name="review_delete"),
-    path("ticket/", TicketListView.as_view(), name="ticket_list"),
-    path("review/", ReviewListView.as_view(), name="review_list"),
+    # This view allows creating a review and its associated ticket in one go (without needing to create the ticket first)
     path(
         "review/create/", TicketReviewCreateView.as_view(), name="review_create_ticket"
     ),
@@ -42,5 +44,7 @@ urlpatterns = [
         FollowRemoveView.as_view(),
         name="follow_remove",
     ),
+    # Posts and feed
     path("posts/", PostsView.as_view(), name="posts"),
+    path("flux/", FeedView.as_view(), name="feed"),
 ]

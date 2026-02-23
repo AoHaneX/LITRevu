@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Flux | LITReview{% endblock %}
+
+{% block content %}
+<div class="frame">
+  <div class="frame-title">Flux</div>
+
+  <div class="frame-body">
+    <div class="card-actions center gap" style="margin-bottom: 18px;">
+      <a class="btn" href="{% url 'ticket_create' %}">Demander une critique</a>
+      <a class="btn" href="{% url 'ticket_list' %}">Créer une critique</a>
+    </div>
+
+    {% if posts %}
+    <div style="display:grid; gap:16px;">
+      {% for post in posts %}
+      {% if post.title %}
+      <!-- Ticket -->
+      <section class="card" aria-label="Ticket">
+        <div style="display:flex; justify-content:space-between; gap:12px;">
+          <p style="margin:0;">
+            <strong>{{ post.user.username }}</strong> a demandé une critique
+          </p>
+          <p style="margin:0; font-size:12px;">{{ post.time_created }}</p>
+        </div>
+
+        <p style="margin-top:10px;"><strong>{{ post.title }}</strong></p>
+
+        {% if post.description %}
+        <p>{{ post.description }}</p>
+        {% endif %}
+
+        {% if post.image %}
+        <img src="{{ post.image.url }}" alt="Image du billet {{ post.title }}"
+          style="max-width: 160px; height: auto; border-radius: 10px;">
+        {% endif %}
+
+        <div class="card-actions right gap" style="margin-top: 12px;">
+          {% if not post.already_reviewed %}
+          <a class="btn" href="{% url 'review_create' post.id %}">Créer une critique</a>
+          {% else %}
+          <span style="font-size: 13px; color: var(--muted);">
+            Vous avez déjà publié une critique.
+          </span>
+          {% endif %}
+        </div>
+      </section>
+
+      {% else %}
+      <!-- Review -->
+      <section class="card" aria-label="Review">
+        <div style="display:flex; justify-content:space-between; gap:12px;">
+          <p style="margin:0;">
+            <strong>{{ post.user.username }}</strong> a publié une critique
+          </p>
+          <p style="margin:0; font-size:12px;">{{ post.time_created }}</p>
+        </div>
+
+        <p style="margin-top:10px;">
+          <strong>{{ post.headline }}</strong> —
+          <span aria-label="Rating">{{ post.rating }}/5</span>
+        </p>
+
+        {% if post.body %}
+        <p>{{ post.body }}</p>
+        {% endif %}
+
+        <!-- Ticket preview inside review card -->
+        <div class="card" style="margin-top: 12px;">
+          <p style="margin:0;"><strong>Ticket</strong> — {{ post.ticket.user.username }}</p>
+          <p style="margin-top:8px;"><strong>{{ post.ticket.title }}</strong></p>
+
+          {% if post.ticket.image %}
+          <img src="{{ post.ticket.image.url }}" alt="Image du billet {{ post.ticket.title }}"
+            style="max-width: 160px; height: auto; border-radius: 10px;">
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>Aucun contenu pour le moment.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

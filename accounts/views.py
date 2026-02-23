@@ -13,6 +13,7 @@ class HomeLoginView(LoginView):
     - If user is authenticated → redirect to posts
     - Otherwise → display the login form (and the signup panel in the template)
     """
+
     template_name = "accounts/home.html"
 
     def dispatch(self, request, *args, **kwargs):
@@ -26,6 +27,7 @@ class SignupView(CreateView):
     Registration page: creates a new user account.
     After successful signup, we log the user in and redirect.
     """
+
     form_class = SignupForm
     template_name = "accounts/signup.html"
     success_url = reverse_lazy("home")
