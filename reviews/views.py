@@ -1,16 +1,21 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from itertools import chain
+
 from django.contrib import messages
-from django.views import View
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.db import transaction
+from django.db.models import Exists, OuterRef, Q
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView
-from django.db.models import Exists, OuterRef
-from django.views.generic import ListView, TemplateView
+from django.views import View
+from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
-from .forms import TicketForm, ReviewForm, FollowUserForm
-from .models import Ticket, Review, UserFollows
-from itertools import chain
+from .forms import FollowUserForm, ReviewForm, TicketForm
+from .models import Review, Ticket, UserFollows
+
+
+User = get_user_model()
 
 
 class IsOwnerMixin(UserPassesTestMixin):
@@ -23,7 +28,7 @@ class IsOwnerMixin(UserPassesTestMixin):
         return obj.user == self.request.user
 
 
-class TicketCreateView(LoginRequiredMixin, CreateView):
+class TicketCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
     Create a new Ticket for the logged-in user.
     """
@@ -31,25 +36,7 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     model = Ticket
     form_class = TicketForm
     template_name = "reviews/ticket_form.html"
-    success_url = reverse_lazy("home")
-
-    def form_valid(self, form):
-        """
-        Automatically assign the current user as the ticket author.
-        """
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class TicketUpdateView(LoginRequiredMixin, IsOwnerMixin, UpdateView):
-    """
-    Update an existing Ticket (only allowed for the owner).
-    """
-
-    model = Ticket
-    form_class = TicketForm
-    template_name = "reviews/ticket_form.html"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("posts")
     success_message = "Billet créé avec succès."
 
     def form_valid(self, form):
@@ -60,15 +47,44 @@ class TicketUpdateView(LoginRequiredMixin, IsOwnerMixin, UpdateView):
         return super().form_valid(form)
 
 
-class TicketDeleteView(LoginRequiredMixin, IsOwnerMixin, DeleteView):
+class TicketUpdateView(
+    LoginRequiredMixin,
+    IsOwnerMixin,
+    SuccessMessageMixin,
+    UpdateView,
+):
+    """
+    Update an existing Ticket (only allowed for the owner).
+    """
+
+    model = Ticket
+    form_class = TicketForm
+    template_name = "reviews/ticket_form.html"
+    success_url = reverse_lazy("posts")
+    success_message = "Billet modifié avec succès."
+
+    def form_valid(self, form):
+        """
+        Automatically assign the current user as the ticket author.
+        """
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class TicketDeleteView(
+    LoginRequiredMixin,
+    IsOwnerMixin,
+    SuccessMessageMixin,
+    DeleteView,
+):
     """
     Delete an existing Ticket (only allowed for the owner).
     """
 
     model = Ticket
     template_name = "reviews/ticket_confirm_delete.html"
-    success_url = reverse_lazy("home")
-    success_message = "Billet modifié avec succès."
+    success_url = reverse_lazy("posts")
+    success_message = "Billet supprimé avec succès."
 
 
 class ReviewListView(LoginRequiredMixin, ListView):
@@ -92,7 +108,7 @@ class ReviewListView(LoginRequiredMixin, ListView):
         )
 
 
-class ReviewCreateView(LoginRequiredMixin, CreateView):
+class ReviewCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
     Create a new Review for a given Ticket.
     The ticket is provided via the URL.
@@ -101,14 +117,20 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_form.html"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("posts")
     success_message = "Critique créée avec succès."
 
     def dispatch(self, request, *args, **kwargs):
         """
         Load the related ticket once and store it on the instance.
         """
+        if not request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+
         self.ticket = get_object_or_404(Ticket, pk=kwargs["ticket_id"])
+        if Review.objects.filter(ticket=self.ticket, user=request.user).exists():
+            messages.info(request, "Vous avez déjà publié une critique pour ce billet.")
+            return redirect("feed")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -128,7 +150,12 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class ReviewUpdateView(LoginRequiredMixin, IsOwnerMixin, UpdateView):
+class ReviewUpdateView(
+    LoginRequiredMixin,
+    IsOwnerMixin,
+    SuccessMessageMixin,
+    UpdateView,
+):
     """
     Update an existing Review (only allowed for the owner).
     """
@@ -136,7 +163,7 @@ class ReviewUpdateView(LoginRequiredMixin, IsOwnerMixin, UpdateView):
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_form.html"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("posts")
     success_message = "Critique modifiée avec succès."
 
     def get_context_data(self, **kwargs):
@@ -148,16 +175,20 @@ class ReviewUpdateView(LoginRequiredMixin, IsOwnerMixin, UpdateView):
         return context
 
 
-class ReviewDeleteView(LoginRequiredMixin, IsOwnerMixin, DeleteView):
+class ReviewDeleteView(
+    LoginRequiredMixin,
+    IsOwnerMixin,
+    SuccessMessageMixin,
+    DeleteView,
+):
     """
     Delete an existing Review (only allowed for the owner).
     """
 
     model = Review
     template_name = "reviews/review_confirm_delete.html"
-    success_url = reverse_lazy("home")
-
-    from django.views.generic import ListView
+    success_url = reverse_lazy("posts")
+    success_message = "Critique supprimée avec succès."
 
 
 class TicketListView(LoginRequiredMixin, ListView):
@@ -176,9 +207,6 @@ class TicketListView(LoginRequiredMixin, ListView):
         Return tickets created by the current user.
         """
         return Ticket.objects.filter(user=self.request.user).order_by("-time_created")
-
-
-User = get_user_model()
 
 
 class FollowListView(LoginRequiredMixin, View):
@@ -246,21 +274,15 @@ class FollowAddView(LoginRequiredMixin, View):
             messages.error(request, "Vous ne pouvez pas vous suivre vous-même.")
             return redirect("follow_list")
 
-        # Prevent duplicate follow
-        already_following = UserFollows.objects.filter(
-            user=request.user,
-            followed_user=target_user,
-        ).exists()
-
-        if already_following:
-            messages.info(request, "Vous suivez déjà cet utilisateur.")
-            return redirect("follow_list")
-
-        # Create the follow relationship
-        UserFollows.objects.create(
+        _, created = UserFollows.objects.get_or_create(
             user=request.user,
             followed_user=target_user,
         )
+
+        if not created:
+            messages.info(request, "Vous suivez déjà cet utilisateur.")
+            return redirect("follow_list")
+
         messages.success(request, f"Vous suivez maintenant {target_user.username}.")
         return redirect("follow_list")
 
@@ -336,16 +358,15 @@ class TicketReviewCreateView(LoginRequiredMixin, View):
         review_form = ReviewForm(request.POST)
 
         if ticket_form.is_valid() and review_form.is_valid():
-            # Save ticket
-            ticket = ticket_form.save(commit=False)
-            ticket.user = request.user
-            ticket.save()
+            with transaction.atomic():
+                ticket = ticket_form.save(commit=False)
+                ticket.user = request.user
+                ticket.save()
 
-            # Save review linked to the newly created ticket
-            review = review_form.save(commit=False)
-            review.user = request.user
-            review.ticket = ticket
-            review.save()
+                review = review_form.save(commit=False)
+                review.user = request.user
+                review.ticket = ticket
+                review.save()
 
             messages.success(request, "Billet et critique créés avec succès.")
             return redirect("posts")
@@ -393,8 +414,12 @@ class FeedView(LoginRequiredMixin, TemplateView):
             .select_related("user")
         )
 
-        reviews = Review.objects.filter(user_id__in=allowed_user_ids).select_related(
-            "user", "ticket", "ticket__user"
+        reviews = Review.objects.filter(
+            Q(user_id__in=allowed_user_ids) | Q(ticket__user=self.request.user)
+        ).select_related(
+            "user",
+            "ticket",
+            "ticket__user",
         )
 
         # Mix and sort by creation datetime (descending)

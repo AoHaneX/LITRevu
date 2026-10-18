@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Ticket, Review
+from .models import Review, Ticket
 
 
 RATING_CHOICES = [(i, str(i)) for i in range(6)]

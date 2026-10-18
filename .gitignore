@@ -1,2 +1,20 @@
 .venv/
 venv/
+__pycache__/
+*.py[cod]
+
+# Local runtime data
+db.sqlite3
+media/
+
+# Environment and tooling
+.env
+.coverage
+htmlcov/
+.pytest_cache/
+.idea/
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
