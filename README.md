@@ -1,153 +1,193 @@
 # LITRevu
-LITReview est une application web développée avec Django permettant :
 
-* de demander des critiques sur un livre ou un article (Tickets)
+LITRevu est une application web développée avec Django permettant de demander et de publier des critiques de livres ou d’articles.
 
-* de publier des critiques (Reviews)
+Les utilisateurs peuvent créer des demandes de critique sous forme de billets, répondre aux billets existants et consulter un flux personnalisé regroupant leurs publications et celles des comptes qu’ils suivent.
 
-* de suivre d'autres utilisateurs
+Ce projet pédagogique a été réalisé à partir d’un cahier des charges fourni dans le cadre du parcours OpenClassrooms.
 
-* de consulter un flux personnalisé combinant billets et critiques
+## Fonctionnalités principales
 
-* Ce projet correspond au MVP demandé dans le cahier des charges.
+### Authentification
 
-## 🚀 Fonctionnalités principales:
+- Inscription avec un modèle utilisateur personnalisé
+- Connexion et déconnexion
+- Accès aux fonctionnalités métier réservé aux utilisateurs authentifiés
 
-### 👤 Authentification:
+### Billets
 
-* Inscription avec modèle utilisateur personnalisé
+- Création d’une demande de critique
+- Ajout facultatif d’une image
+- Consultation des billets personnels
+- Modification réservée à l’auteur
+- Suppression par requête POST protégée par CSRF
 
-* Connexion / Déconnexion
+### Critiques
 
-* Accès protégé aux pages authentifiées
+- Publication d’une critique en réponse à un billet
+- Création conjointe d’un billet et de sa critique
+- Attribution d’une note comprise entre 0 et 5
+- Aperçu du billet associé
+- Modification réservée à l’auteur
+- Suppression par requête POST protégée par CSRF
 
-### 📝 Billets (Tickets)
+### Flux personnalisé
 
-* Création d’un billet avec image optionnelle
+Le flux réunit les billets et les critiques :
 
-* Modification (réservée à l’auteur)
+- de l’utilisateur connecté ;
+- des utilisateurs qu’il suit.
 
-* Suppression via méthode POST
+Les publications sont classées de la plus récente à la plus ancienne selon leur date de création.
 
-* Liste des billets personnels
+### Abonnements
 
-### ⭐ Critiques (Reviews)
+- Recherche d’un utilisateur par son nom
+- Suggestions d’utilisateurs
+- Filtrage dynamique des suggestions côté client
+- Abonnement à un utilisateur
+- Consultation des utilisateurs suivis
+- Désabonnement
 
-* Création d’une critique liée à un billet(Ou création du billet si aucun billet saisit)
+L’application empêche également l’auto-abonnement et les abonnements en double.
 
-* Modification (réservée à l’auteur)
+## Technologies utilisées
 
-* Suppression via méthode POST
+- Python 3.13
+- Django 6
+- SQLite
+- Pillow
+- HTML5
+- CSS personnalisé, sans framework
+- JavaScript pour le filtrage dynamique
 
-* Aperçu du ticket sur la page de création/modification
+## Architecture
 
-### 🔄 Flux
+L’application s’appuie sur trois modèles métier principaux :
 
-Affichage des billets et critiques :
+- `Ticket` : demande de critique concernant un livre ou un article ;
+- `Review` : critique associée à un billet ;
+- `UserFollows` : relation d’abonnement entre deux utilisateurs.
 
-* de l’utilisateur courant
+Le modèle utilisateur personnalisé hérite de `AbstractUser`.
 
-* des utilisateurs suivis
+Les vues génériques de Django assurent les opérations de création, de consultation, de modification et de suppression. Des contrôles d’authentification et de propriété limitent les actions sensibles aux utilisateurs autorisés.
 
-* Tri par date décroissante
+## Accessibilité
 
-### 👥 Abonnements
+L’interface intègre plusieurs pratiques d’accessibilité :
 
-* Suivre ou se désabonner d'un utilisateur
+- labels associés aux champs de formulaire ;
+- groupes de boutons radio structurés avec `fieldset` et `legend` ;
+- lien d’évitement vers le contenu principal ;
+- styles de focus visibles pour la navigation au clavier ;
+- textes alternatifs pour les images ;
+- messages d’erreur associés aux formulaires.
 
-* Liste des utilisateurs suivis
+Ces éléments constituent des mesures d’accessibilité intégrées au développement. Ils ne remplacent pas un audit complet de conformité WCAG.
 
-* Suggestions d’utilisateurs
+## Installation
 
-* nRecherche dynamique côté client
+### 1. Cloner le dépôt
 
-### 🏗️ Technologies utilisées
-
-* Python 3.13
-
-* Django 6
-
-* SQLite
-
-* HTML5
-
-* CSS personnalisé (sans framework)
-
-* JavaScript (filtrage dynamique)
-
-### ♿ Accessibilité (WCAG)
-
-* L’interface respecte les bonnes pratiques WCAG :
-
-* Labels associés aux champs de formulaire
-
-* Fieldset/legend pour les groupes de radios
-
-* Skip link pour navigation clavier
-
-* Focus visible
-
-* Contraste suffisant
-
-* Attributs alt pour les images
-
-* Actions sensibles via POST + CSRF
-
-### ⚙️ Installation
-#### 1️⃣ Cloner le repository
-`git clone https://github.com/AoHaneX/LITRevu.git`
-
-`cd LITReview`
-#### 2️⃣ Créer un environnement virtuel
-`python -m venv venv`
-
-Activer l’environnement :
-
-Windows:
-
-`venv\Scripts\activate`
-
-macOS / Linux
-
-`source venv/bin/activate`
-#### 3️⃣ Installer les dépendances
-`pip install -r requirements.txt`
-
-Si le fichier n’existe pas :
-
-`pip install django`
-
-#### 4️⃣ Base de données
-
-Le projet utilise SQLite, voici comment créer une base de données locale:
+```bash
+git clone https://github.com/AoHaneX/LITRevu.git
+cd LITRevu
 ```
-python manage.py migrate
 
+### 2. Créer un environnement virtuel
+
+```bash
+python -m venv .venv
+```
+
+Sous Windows avec PowerShell :
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Sous Windows avec l’invite de commandes :
+
+```bat
+.venv\Scripts\activate.bat
+```
+
+Sous macOS ou Linux :
+
+```bash
+source .venv/bin/activate
+```
+
+### 3. Installer les dépendances
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Préparer la base de données
+
+```bash
+python manage.py migrate
+```
+
+La création d’un compte administrateur est facultative :
+
+```bash
 python manage.py createsuperuser
 ```
-#### 5️⃣ Lancer le serveur
-`python manage.py runserver`
 
-Accéder à l’application par l'url:
+Un compte utilisateur standard peut également être créé depuis la page d’inscription de l’application.
 
-http://127.0.0.1:8000/
+### 5. Lancer le serveur
 
-### 📁 Structure du projet
+```bash
+python manage.py runserver
 ```
-WebDjango/
-│
-├── accounts/        # Authentification & utilisateur personnalisé
-├── reviews/         # Tickets, Reviews, Follow, Feed
-├── templates/
-│   ├── accounts/
-│   └── reviews/
+
+L’application est ensuite accessible à l’adresse suivante :
+
+[http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+## Structure du projet
+
+```text
+LITRevu/
+├── accounts/           # Authentification et utilisateur personnalisé
+├── config/             # Configuration principale de Django
+├── reviews/            # Billets, critiques, abonnements et flux
 ├── static/
-│   └── css/
-├── config/          # Settings & configuration
-└── manage.py
+│   └── css/            # Feuilles de style
+├── templates/
+│   ├── accounts/       # Interfaces d’inscription et de connexion
+│   └── reviews/        # Interfaces métier
+├── manage.py
+├── requirements.txt
+├── README.md
+├── Django+app+web_Cahier+des+charges+[2.0].pdf
+└── LITReview+-+Schema.pdf
 ```
 
-### Auteur:
-STALIN--RENAULT Adrian
+## État et limites connues
 
-*Projet réalisé dans le cadre du parcours OpenClassrooms.*
+- Le projet est actuellement prévu pour une exécution locale.
+- Aucune démonstration hébergée n’est disponible.
+- Les fichiers de tests sont présents, mais les scénarios automatisés restent à implémenter.
+- Le blocage d’un utilisateur demandé dans le cahier des charges n’est pas encore implémenté.
+- La configuration actuelle de Django est une configuration de développement et ne doit pas être utilisée telle quelle en production.
+- Un audit complet d’accessibilité reste à réaliser.
+
+## Documentation
+
+Le dépôt contient :
+
+- le cahier des charges fonctionnel et technique ;
+- le schéma de données fourni pour le projet ;
+- les instructions d’installation et d’utilisation locale.
+
+## Auteur
+
+**Adrian Stalin Renault**
+
+Projet réalisé dans le cadre du parcours OpenClassrooms.
