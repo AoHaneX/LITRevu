@@ -1,0 +1,196 @@
+[
+  {
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$1500000$Y8JsTaXNeKYPj8EJzLOkHM$06QDs990/WlKJfpjeMtPIaOmDdufjTlX0jMP6LbKaUA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "AoHane",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-23T22:10:10.630Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$1500000$kuBRo82t5Hybwhi2hVsGuq$nrgK4Cr9RjOVwfSYX2sGP8k0pOnW1z2gT4itOFng2Wg=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "camille.martin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-23T22:10:11.010Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$1500000$FBdtddV887Ki4v9l547Suy$w6ElHmb4uF1QbeWvW/gNhFkvhfDlccLcMl/3+WAXUyw=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "hugo_lit",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-23T22:10:11.416Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$1500000$VX57hsfzDgAvYSF6zjjQi8$p79K0eL2TEdetG3BBvjjZWuxkEOhxtQ9F4hSh7+GaOw=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "ines.reads",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-23T22:10:11.780Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$1500000$Dtu9CE4vd27oZ0aCcK6Hii$wal+I7jkCR2Swug0v9KG3WqdXrcItfll6r3dyYZ6GkA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "leo.dupont",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-23T22:10:12.143Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "reviews.ticket",
+    "pk": 1,
+    "fields": {
+      "title": "Clean Code — Robert C. Martin",
+      "description": "Je cherche un avis sur ce classique : ses conseils sont-ils toujours d’actualité pour un projet Python ?",
+      "user": 1,
+      "image": "",
+      "time_created": "2026-10-12T07:30:00Z"
+    }
+  },
+  {
+    "model": "reviews.ticket",
+    "pk": 2,
+    "fields": {
+      "title": "Le Petit Prince — Antoine de Saint-Exupéry",
+      "description": "Relu récemment avec un regard d’adulte. J’aimerais connaître vos impressions sur ce conte.",
+      "user": 2,
+      "image": "",
+      "time_created": "2026-10-13T07:30:00Z"
+    }
+  },
+  {
+    "model": "reviews.ticket",
+    "pk": 3,
+    "fields": {
+      "title": "Article : débuter avec l’ORM de Django",
+      "description": "Un article clair pour comprendre les requêtes et les relations entre modèles. Est-il adapté aux débutants ?",
+      "user": 3,
+      "image": "",
+      "time_created": "2026-10-14T07:30:00Z"
+    }
+  },
+  {
+    "model": "reviews.ticket",
+    "pk": 4,
+    "fields": {
+      "title": "Dune — Frank Herbert",
+      "description": "Avant de regarder les films, le livre vaut-il le détour ?",
+      "user": 1,
+      "image": "",
+      "time_created": "2026-10-15T07:30:00Z"
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 1,
+    "fields": {
+      "ticket": 1,
+      "rating": 4,
+      "headline": "Toujours pertinent",
+      "body": "Certains exemples ont vieilli, mais les principes de nommage et de découpage s’appliquent très bien en Python.",
+      "user": 4,
+      "time_created": "2026-10-19T07:30:00Z"
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 2,
+    "fields": {
+      "ticket": 2,
+      "rating": 5,
+      "headline": "Un conte qui grandit avec son lecteur",
+      "body": "Chaque relecture révèle un nouveau niveau de lecture. Une histoire courte, mais d’une grande justesse.",
+      "user": 1,
+      "time_created": "2026-10-17T07:30:00Z"
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 3,
+    "fields": {
+      "ticket": 4,
+      "rating": 5,
+      "headline": "Un monument de la science-fiction",
+      "body": "Un univers d’une richesse rare, porté par une intrigue politique passionnante. À lire avant les films.",
+      "user": 3,
+      "time_created": "2026-10-18T07:30:00Z"
+    }
+  },
+  {
+    "model": "reviews.userfollows",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "followed_user": 2
+    }
+  },
+  {
+    "model": "reviews.userfollows",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "followed_user": 3
+    }
+  },
+  {
+    "model": "reviews.userfollows",
+    "pk": 3,
+    "fields": {
+      "user": 2,
+      "followed_user": 1
+    }
+  }
+]

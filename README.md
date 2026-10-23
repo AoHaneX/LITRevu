@@ -125,6 +125,14 @@ python manage.py createsuperuser
 
 Un compte utilisateur standard peut également être créé depuis la page d’inscription.
 
+Pour découvrir l’application avec du contenu, des données de démonstration peuvent être chargées :
+
+```bash
+python manage.py loaddata demo
+```
+
+Elles créent cinq comptes (`AoHane`, `camille.martin`, `hugo_lit`, `ines.reads`, `leo.dupont`), des billets, des critiques et des abonnements. Tous les comptes utilisent le mot de passe `demo-litrevu-2026`. Le compte `AoHane` permet de voir un flux complet.
+
 ### 5. Lancer le serveur
 
 ```bash
